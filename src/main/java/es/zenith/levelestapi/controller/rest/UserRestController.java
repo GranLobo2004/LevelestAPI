@@ -1,0 +1,92 @@
+package es.zenith.levelestapi.controller.rest;
+
+import es.zenith.levelestapi.dto.*;
+import es.zenith.levelestapi.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+
+
+@RestController
+@RequestMapping("/users")
+public class UserRestController {
+
+    @Autowired
+    private UserService userService;
+
+    public class LoginForm{
+        private String email;
+        private String password;
+
+        public LoginForm(){}
+        public void setEmail(String email) {
+            this.email = email;
+        }
+        public void setPassword(String password) {
+            this.password = password;
+        }
+        public String getEmail() {
+            return email;
+        }
+        public String getPassword() {
+            return password;
+        }
+    }
+
+    @PostMapping("/login")
+    public UserDTO login(@RequestBody LoginForm loginForm){
+        return userService.login(loginForm);
+    }
+
+    @GetMapping("/")
+    public List<UserSimpleDTO> getUsers(){
+       return userService.getUsers();
+    }
+
+    @GetMapping("/{id}")
+    public UserDTO getUser(@PathVariable long id){
+        return userService.getUser(id);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserFormDTO userFormDTO){
+        UserDTO userDTO = userService.saveUser(userFormDTO);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(userDTO.id()).toUri();
+        return ResponseEntity.created(location).body(userDTO);
+    }
+
+    @PutMapping("/{id}")
+    public UserDTO updateUser(@PathVariable long id, @RequestBody UserFormDTO userFormDTO){
+        return userService.updateUser(id, userFormDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public UserDTO deleteUser(@PathVariable long id){
+        return userService.deleteUser(id);
+    }
+
+    @GetMapping("/{id}/completedLevels/")
+    public List<LevelSimpleDTO>  getLevelsCompleted(@PathVariable long id){
+        return userService.getLevels(id);
+    }
+
+    @PostMapping("/{id}/completedLevels/")
+    public LevelDTO createLevelsCompleted(@PathVariable long id, @RequestBody long levelId){
+        return userService.addCompletedLevels(id, levelId);
+    }
+
+    @GetMapping("/{id}/insignias/")
+    public List<InsigniaDTO> getInsignias(@PathVariable long id){
+        return userService.getInsignias(id);
+    }
+
+    @PostMapping("/{id}/insignias/")
+    public InsigniaDTO addInsignia(@PathVariable long id, @RequestBody InsigniaDTO insigniaDTO){
+        return userService.addInsignia(id, insigniaDTO);
+    }
+}
