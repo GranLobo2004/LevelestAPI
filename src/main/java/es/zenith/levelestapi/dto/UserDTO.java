@@ -15,6 +15,6 @@ public record UserDTO(
     String surname,
     String email,
     List<String> Roles,
-    List<Insignia> insignias,
-    List<Level> completedLevels
+    List<InsigniaDTO> insignias,
+    List<LevelSimpleDTO> completedLevels
 ){}
