@@ -43,7 +43,7 @@ public class UserService {
     @PostConstruct
     public void init() {
         if (userRepository.count()>0) return;
-        userRepository.save(new User());
+        userRepository.save(new User("admin", "password", "admin", "", "admin@root.es", List.of("USER","ADMIN")));
     }
 
     public List<UserSimpleDTO> getUsers() {
@@ -61,7 +61,7 @@ public class UserService {
 
     @Transactional
     public UserDTO saveUser(UserFormDTO userFormDTO) {
-        User user = new  User(userFormDTO.username(), userFormDTO.password(), userFormDTO.name(), userFormDTO.surname(), userFormDTO.email());
+        User user = new  User(userFormDTO.username(), userFormDTO.password(), userFormDTO.name(), userFormDTO.surname(), userFormDTO.email(), List.of("USER"));
         return userMapper.toDTO(userRepository.save(user));
     }
 
@@ -125,5 +125,11 @@ public class UserService {
             return userMapper.toDTO(user);
         }
         return null;
+    }
+
+    public UserDTO addRoletoUser(long id, String role) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
+        user.addRole(role.toUpperCase());
+        return userMapper.toDTO(userRepository.save(user));
     }
 }

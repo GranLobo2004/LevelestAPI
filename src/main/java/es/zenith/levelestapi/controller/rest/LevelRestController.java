@@ -24,6 +24,11 @@ public class LevelRestController {
         return levelService.getAll();
     }
 
+    @GetMapping("/{subject}")
+    public List<LevelSimpleDTO> getLevelsBySubject(@PathVariable String subject){
+        return levelService.filterBySubject(subject);
+    }
+
     @GetMapping("/{id}")
     public LevelDTO getLevel(@PathVariable long id){
         return levelService.getLevel(id);

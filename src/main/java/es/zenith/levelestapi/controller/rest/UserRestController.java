@@ -70,23 +70,28 @@ public class UserRestController {
         return userService.deleteUser(id);
     }
 
-    @GetMapping("/{id}/completedLevels/")
+    @GetMapping("/{id}/completedLevels")
     public List<LevelSimpleDTO>  getLevelsCompleted(@PathVariable long id){
         return userService.getLevels(id);
     }
 
-    @PostMapping("/{id}/completedLevels/")
+    @PostMapping("/{id}/completedLevels")
     public LevelDTO createLevelsCompleted(@PathVariable long id, @RequestBody long levelId){
         return userService.addCompletedLevels(id, levelId);
     }
 
-    @GetMapping("/{id}/insignias/")
+    @GetMapping("/{id}/insignias")
     public List<InsigniaDTO> getInsignias(@PathVariable long id){
         return userService.getInsignias(id);
     }
 
-    @PostMapping("/{id}/insignias/")
+    @PostMapping("/{id}/insignias")
     public InsigniaDTO addInsignia(@PathVariable long id, @RequestBody InsigniaDTO insigniaDTO){
         return userService.addInsignia(id, insigniaDTO);
+    }
+
+    @PostMapping("/{id}/roles")
+    public UserDTO addRole(@PathVariable long id, @RequestBody String role){
+        return userService.addRoletoUser(id, role);
     }
 }

@@ -59,4 +59,14 @@ public class LevelService {
         levelRepository.delete(level);
         return levelMapper.toDTO(level);
     }
+
+    public List<LevelSimpleDTO> filterBySubject(String subject) {
+        List<LevelSimpleDTO> list = new ArrayList<>();
+        for (Level level : levelRepository.findAll()) {
+            if (level.getSubject().equals(Subject.valueOf(subject))) {
+                list.add(levelMapper.toSimpleDTO(level));
+            }
+        }
+        return list;
+    }
 }
