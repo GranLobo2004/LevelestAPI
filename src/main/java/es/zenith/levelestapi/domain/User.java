@@ -23,7 +23,7 @@ public class User {
     private String name;
     private String surname;
     private String email;
-    private List<String> Roles;
+    private List<String> roles = new ArrayList<>();;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Insignia> insignias = new ArrayList<>();
@@ -33,13 +33,14 @@ public class User {
 
     public User() {}
 
-    public User(String username, String password, String name, String surname, String email) {
+    public User(String username, String password, String name, String surname, String email, List<String> roles) {
         this.username = username;
         this.password = password;
         this.creationDate = LocalDateTime.now();
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -106,7 +107,15 @@ public class User {
         return completedLevels;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
     public void addInsignia(Insignia insignia) {
         this.insignias.add(insignia);
+    }
+
+    public void addRole(String role) {
+        this.roles.add(role);
     }
 }
