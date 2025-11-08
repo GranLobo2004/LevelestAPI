@@ -15,13 +15,12 @@ public class Insignia {
     private String nombre;
     private String description;
 
-    @Lob
-    private Blob image;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Image image;
 
-    public Insignia(String nombre, String description, Blob image) {
+    public Insignia(String nombre, String description) {
         this.nombre = nombre;
         this.description = description;
-        this.image = image;
     }
 
     public Insignia() {
@@ -52,11 +51,11 @@ public class Insignia {
         this.description = description;
     }
 
-    public Blob getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(Blob image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 }
