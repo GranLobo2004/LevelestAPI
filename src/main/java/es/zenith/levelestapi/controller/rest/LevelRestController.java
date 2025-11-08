@@ -24,7 +24,7 @@ public class LevelRestController {
         return levelService.getAll();
     }
 
-    @GetMapping("/{subject}")
+    @GetMapping("/query/{subject}")
     public List<LevelSimpleDTO> getLevelsBySubject(@PathVariable String subject){
         return levelService.filterBySubject(subject);
     }

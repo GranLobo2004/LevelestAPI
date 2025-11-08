@@ -1,6 +1,5 @@
 package es.zenith.levelestapi.service;
 
-import es.zenith.levelestapi.controller.rest.UserRestController;
 import es.zenith.levelestapi.domain.Insignia;
 import es.zenith.levelestapi.domain.Level;
 import es.zenith.levelestapi.domain.User;
@@ -35,6 +34,9 @@ public class UserService {
 
     @Autowired
     private InsigniaMapper insigniaMapper;
+
+    @Autowired
+    private InsigniaService insigniaService;
 
     @Autowired
     private LevelService levelService;
@@ -111,15 +113,15 @@ public class UserService {
     }
 
     @Transactional
-    public InsigniaDTO addInsignia(long id, InsigniaDTO insigniaDTO) {
+    public InsigniaDTO addInsignia(long id, long insigniaId) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
-        Insignia insignia = insigniaMapper.toEntity(insigniaDTO);
+        Insignia insignia = insigniaMapper.toEntity(insigniaService.getInsignia(insigniaId));
         user.addInsignia(insignia);
         userRepository.save(user);
-        return insigniaDTO;
+        return insigniaMapper.toDTO(insignia);
     }
 
-    public UserDTO login(UserRestController.LoginForm loginForm) {
+    public UserDTO login(LoginForm loginForm) {
         User user = userRepository.findByEmail(loginForm.getEmail()).orElseThrow(() -> new NoSuchElementException("User not found"));
         if (user.getPassword().equals(loginForm.getPassword())) {
             return userMapper.toDTO(user);
