@@ -19,25 +19,6 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    public class LoginForm{
-        private String email;
-        private String password;
-
-        public LoginForm(){}
-        public void setEmail(String email) {
-            this.email = email;
-        }
-        public void setPassword(String password) {
-            this.password = password;
-        }
-        public String getEmail() {
-            return email;
-        }
-        public String getPassword() {
-            return password;
-        }
-    }
-
     @PostMapping("/login")
     public UserDTO login(@RequestBody LoginForm loginForm){
         return userService.login(loginForm);
@@ -86,8 +67,8 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/insignias")
-    public InsigniaDTO addInsignia(@PathVariable long id, @RequestBody InsigniaDTO insigniaDTO){
-        return userService.addInsignia(id, insigniaDTO);
+    public InsigniaDTO addInsignia(@PathVariable long id, @RequestBody long insigniaId){
+        return userService.addInsignia(id, insigniaId);
     }
 
     @PostMapping("/{id}/roles")

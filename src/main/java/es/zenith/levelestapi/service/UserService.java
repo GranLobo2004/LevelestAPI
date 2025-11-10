@@ -37,6 +37,9 @@ public class UserService {
     private InsigniaMapper insigniaMapper;
 
     @Autowired
+    private InsigniaService insigniaService;
+
+    @Autowired
     private LevelService levelService;
 
 
@@ -112,15 +115,17 @@ public class UserService {
     }
 
     @Transactional
-    public InsigniaDTO addInsignia(long id, InsigniaDTO insigniaDTO) {
+    public InsigniaDTO addInsignia(long id, long insigniaId) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
+        Insignia insignia = insigniaMapper.toEntity(insigniaService.getInsignia(insigniaId));
+        user.addInsignia(insignia);
         Insignia insignia = insigniaMapper.toEntity(insigniaDTO);
         if(user.getInsignias().contains(insignia)) user.addInsignia(insignia);
         userRepository.save(user);
-        return insigniaDTO;
+        return insigniaMapper.toDTO(insignia);
     }
 
-    public UserDTO login(UserRestController.LoginForm loginForm) {
+    public UserDTO login(LoginForm loginForm) {
         User user = userRepository.findByEmail(loginForm.getEmail()).orElseThrow(() -> new NoSuchElementException("User not found"));
         if (user.getPassword().equals(loginForm.getPassword())) {
             return userMapper.toDTO(user);
