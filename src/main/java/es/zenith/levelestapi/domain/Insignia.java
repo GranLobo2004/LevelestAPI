@@ -1,8 +1,7 @@
 package es.zenith.levelestapi.domain;
 
+import es.zenith.levelestapi.Enumeration.InsigniaType;
 import jakarta.persistence.*;
-
-import java.sql.Blob;
 
 
 @Entity
@@ -14,18 +13,18 @@ public class Insignia {
 
     private String nombre;
     private String description;
+    private InsigniaType type;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Image image;
 
-    public Insignia(String nombre, String description) {
+    public Insignia(String nombre, String description,  String tipo) {
         this.nombre = nombre;
         this.description = description;
+        this.type = InsigniaType.valueOf(tipo.toUpperCase());
     }
 
-    public Insignia() {
-
-    }
+    public Insignia() {}
 
     public long getId() {
         return id;
@@ -57,5 +56,13 @@ public class Insignia {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public InsigniaType getType() {
+        return type;
+    }
+
+    public void setType(String tipo) {
+        this.type = InsigniaType.valueOf(tipo.toUpperCase());
     }
 }

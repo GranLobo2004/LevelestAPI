@@ -96,7 +96,8 @@ public class UserService {
     public LevelDTO addCompletedLevels(long id, long levelId) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
         LevelDTO levelDTO = levelService.getLevel(levelId);
-        user.addCompletedLevels(levelMapper.toEntity(levelDTO));
+        Level level = levelMapper.toEntity(levelDTO);
+        if(user.getCompletedLevels().contains(level)) user.addCompletedLevels(level);
         userRepository.save(user);
         return levelDTO;
     }
@@ -114,7 +115,7 @@ public class UserService {
     public InsigniaDTO addInsignia(long id, InsigniaDTO insigniaDTO) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
         Insignia insignia = insigniaMapper.toEntity(insigniaDTO);
-        user.addInsignia(insignia);
+        if(user.getInsignias().contains(insignia)) user.addInsignia(insignia);
         userRepository.save(user);
         return insigniaDTO;
     }

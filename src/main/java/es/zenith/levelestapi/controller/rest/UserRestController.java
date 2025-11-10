@@ -71,7 +71,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}/completedLevels")
-    public List<LevelSimpleDTO>  getLevelsCompleted(@PathVariable long id){
+    public List<LevelSimpleDTO> getLevelsCompleted(@PathVariable long id){
         return userService.getLevels(id);
     }
 

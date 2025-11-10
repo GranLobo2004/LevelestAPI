@@ -1,4 +1,4 @@
-package com.Zenith.levelestapi;
+package es.zenith.levelestapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

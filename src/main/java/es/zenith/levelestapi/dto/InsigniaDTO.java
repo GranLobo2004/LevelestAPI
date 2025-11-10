@@ -1,13 +1,11 @@
 package es.zenith.levelestapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.sql.Blob;
+import es.zenith.levelestapi.Enumeration.InsigniaType;
 
 public record InsigniaDTO(
     Long id,
     String nombre,
     String description,
+    InsigniaType type,
     ImageDTO image
 ) {}
