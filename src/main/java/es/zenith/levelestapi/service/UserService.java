@@ -1,6 +1,5 @@
 package es.zenith.levelestapi.service;
 
-import es.zenith.levelestapi.controller.rest.UserRestController;
 import es.zenith.levelestapi.domain.Insignia;
 import es.zenith.levelestapi.domain.Level;
 import es.zenith.levelestapi.domain.User;
@@ -45,8 +44,18 @@ public class UserService {
 
     @PostConstruct
     public void init() {
+        List<User> users = List.of(
+                new User("Victor","12345","Victor Hugo","OLIVEIRA","victor@gmail.com", List.of("USER", "DEVELOPER") ),
+                new User("Naroa","12345","Naroa","Martín","naroa@gmail.com", List.of("USER", "DEVELOPER") ),
+                new User("David","12345","David","Martín","david@gmail.com", List.of("USER", "DEVELOPER") ),
+                new User("Jaime","12345","Jaime","Ochoa de Alda","jaime@gmail.com", List.of("USER", "DEVELOPER") ),
+                new User("Nerea","12345","Nerea Tindary","Morocho","nerea@gmail.com", List.of("USER", "DEVELOPER") ),
+                new User("Samuel","12345","Samuel","Melían","samuel@gmail.com", List.of("USER", "DEVELOPER") )
+                );
         if (userRepository.count()>0) return;
-        userRepository.save(new User("admin", "password", "admin", "", "admin@root.es", List.of("USER","ADMIN")));
+        for (User user : users) {
+            userRepository.save(user);
+        }
     }
 
     public List<UserSimpleDTO> getUsers() {
@@ -118,9 +127,7 @@ public class UserService {
     public InsigniaDTO addInsignia(long id, long insigniaId) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
         Insignia insignia = insigniaMapper.toEntity(insigniaService.getInsignia(insigniaId));
-        user.addInsignia(insignia);
-        Insignia insignia = insigniaMapper.toEntity(insigniaDTO);
-        if(user.getInsignias().contains(insignia)) user.addInsignia(insignia);
+        if(!user.getInsignias().contains(insignia)) user.addInsignia(insignia);
         userRepository.save(user);
         return insigniaMapper.toDTO(insignia);
     }

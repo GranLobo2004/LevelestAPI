@@ -1,11 +1,7 @@
 package es.zenith.levelestapi.dto;
 
-
-import es.zenith.levelestapi.domain.Insignia;
-import es.zenith.levelestapi.domain.Level;
-
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 
 public record UserDTO(
     Long id,
@@ -14,7 +10,7 @@ public record UserDTO(
     String name,
     String surname,
     String email,
-    List<String> roles,
-    List<InsigniaDTO> insignias,
-    List<LevelSimpleDTO> completedLevels
+    Collection<String> roles,
+    Collection<InsigniaDTO> insignias,
+    Collection<LevelSimpleDTO> completedLevels
 ){}
