@@ -31,9 +31,12 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Level> completedLevels = new  ArrayList<>();
 
-    public User() {}
+    public User() {
+        this.id = 0;
+    }
 
     public User(String username, String password, String name, String surname, String email, List<String> roles) {
+        this.id = 0;
         this.username = username;
         this.password = password;
         this.creationDate = LocalDateTime.now();
@@ -76,11 +79,8 @@ public class User {
     }
 
     public void addCompletedLevels(Level level) {
-        this.completedLevels.add(level);
-    }
 
-    public void recieveInsignia(Insignia insignia) {
-        this.insignias.add(insignia);
+        this.completedLevels.add(level);
     }
 
     public String getUsername() {
@@ -112,7 +112,13 @@ public class User {
     }
 
     public void addInsignia(Insignia insignia) {
-        this.insignias.add(insignia);
+        if (insignia instanceof Milestone){
+            Milestone milestone = (Milestone) insignia;
+            milestone.setTier(milestone.getTier() + 1);
+        }
+        if (!this.insignias.contains(insignia)) {
+            this.insignias.add(insignia);
+        }
     }
 
     public void addRole(String role) {

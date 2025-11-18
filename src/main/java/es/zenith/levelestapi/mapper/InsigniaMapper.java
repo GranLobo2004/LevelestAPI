@@ -1,6 +1,7 @@
 package es.zenith.levelestapi.mapper;
 
 import es.zenith.levelestapi.domain.Insignia;
+import es.zenith.levelestapi.domain.Medal;
 import es.zenith.levelestapi.dto.InsigniaDTO;
 import org.mapstruct.Mapper;
 

@@ -1,10 +1,9 @@
 package es.zenith.levelestapi.domain;
 
 import es.zenith.levelestapi.Enumeration.Subject;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Level {
@@ -15,14 +14,22 @@ public class Level {
 
     private Subject subject;
     private String question;
+    private List<String> possibleAnswers;
     private String answer;
 
     public Level() {
+        this.id = 0;
     }
-    public Level(Subject subject, String question, String answer) {
+    public Level(Subject subject, String question, String answer,  List<String> possibleAnswers) {
         this.subject = subject;
         this.question = question;
+        this.id = 0;
         this.answer = answer;
+        this.possibleAnswers = possibleAnswers;
+    }
+
+    public void setId(long id){
+        this.id = id;
     }
 
     public Long getId() {
@@ -51,5 +58,13 @@ public class Level {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public List<String> getPossibleAnswers() {
+        return possibleAnswers;
+    }
+
+    public void setPossibleAnswers(List<String> possibleAnswers) {
+        this.possibleAnswers = possibleAnswers;
     }
 }

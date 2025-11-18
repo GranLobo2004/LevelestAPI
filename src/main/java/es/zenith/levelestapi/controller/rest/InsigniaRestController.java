@@ -60,6 +60,7 @@ public class InsigniaRestController {
         return insigniaService.deleteInsignia(id);
     }
 
+    @Deprecated
     @GetMapping("/{id}/image")
     public ResponseEntity<Object> getInsigniaImage(@PathVariable long id){
         try{

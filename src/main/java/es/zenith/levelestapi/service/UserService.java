@@ -44,6 +44,7 @@ public class UserService {
 
     @PostConstruct
     public void init() {
+        if (userRepository.count()>0) return;
         List<User> users = List.of(
                 new User("Victor","12345","Victor Hugo","OLIVEIRA","victor@gmail.com", List.of("USER", "DEVELOPER") ),
                 new User("Naroa","12345","Naroa","Martín","naroa@gmail.com", List.of("USER", "DEVELOPER") ),
@@ -52,7 +53,6 @@ public class UserService {
                 new User("Nerea","12345","Nerea Tindary","Morocho","nerea@gmail.com", List.of("USER", "DEVELOPER") ),
                 new User("Samuel","12345","Samuel","Melían","samuel@gmail.com", List.of("USER", "DEVELOPER") )
                 );
-        if (userRepository.count()>0) return;
         for (User user : users) {
             userRepository.save(user);
         }
@@ -109,7 +109,13 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
         LevelDTO levelDTO = levelService.getLevel(levelId);
         Level level = levelMapper.toEntity(levelDTO);
-        if(user.getCompletedLevels().contains(level)) user.addCompletedLevels(level);
+        boolean containsLevel = false;
+        for (Level l: user.getCompletedLevels()){
+            if (l.getId().equals(level.getId())){
+                containsLevel = true;
+            }
+        }
+        if (!containsLevel) user.addCompletedLevels(level);
         userRepository.save(user);
         return levelDTO;
     }
@@ -126,8 +132,8 @@ public class UserService {
     @Transactional
     public InsigniaDTO addInsignia(long id, long insigniaId) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
-        Insignia insignia = insigniaMapper.toEntity(insigniaService.getInsignia(insigniaId));
-        if(!user.getInsignias().contains(insignia)) user.addInsignia(insignia);
+        Insignia insignia = insigniaService.findInsignia(insigniaId);
+        user.addInsignia(insignia);
         userRepository.save(user);
         return insigniaMapper.toDTO(insignia);
     }

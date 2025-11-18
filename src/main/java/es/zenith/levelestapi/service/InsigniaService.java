@@ -1,11 +1,15 @@
 package es.zenith.levelestapi.service;
 
+import es.zenith.levelestapi.Enumeration.InsigniaType;
 import es.zenith.levelestapi.domain.Insignia;
+import es.zenith.levelestapi.domain.Medal;
+import es.zenith.levelestapi.domain.Milestone;
 import es.zenith.levelestapi.dto.InsigniaDTO;
 import es.zenith.levelestapi.mapper.ImageMapper;
 import es.zenith.levelestapi.mapper.InsigniaMapper;
 import es.zenith.levelestapi.repository.InsigniaRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -34,70 +38,29 @@ public class InsigniaService {
     @Autowired
     private ImageService imageService;
 
-    public static MultipartFile getImageAsMultipart(String imageName) throws IOException {
-        // Cargar el archivo desde resources/static/Insignias/Images
-        ClassPathResource resource = new ClassPathResource("static/Insignias/Images/" + imageName);
-
-        if (!resource.exists()) {
-            throw new IOException("No se encontró la imagen: " + imageName);
-        }
-
-        // Detectar tipo MIME según la extensión
-        String mimeType = URLConnection.guessContentTypeFromName(imageName);
-        if (mimeType == null) {
-            mimeType = "application/octet-stream"; // fallback genérico
-        }
-
-        // Crear MultipartFile usando el contenido del recurso
-        try (InputStream inputStream = resource.getInputStream()) {
-            return new MockMultipartFile(
-                    "file",         // nombre del parámetro
-                    imageName,      // nombre original
-                    mimeType,       // tipo MIME
-                    inputStream     // contenido binario
-            );
-        }
-    }
-
     @PostConstruct
     public void init() {
         if (insigniaRepository.count()>0) return;
         List<Insignia> insignias = List.of(
-                new Insignia("Knowledge conector", "Comparte conocimiento con el equipo", "medal"),
-                new Insignia("Adaptability engine", "Se adapta rápido a cambios y obstáculos", "medal"),
-                new Insignia("Bug slayer", "Detecta y elimina bugs constantemente", "medal"),
-                new Insignia("Communication champ", "Mantiene una comunicación clara y efectiva", "medal"),
-                new Insignia("Fearless leader", "Lidera iniciativas con valentía", "medal"),
-                new Insignia("Helping hand", "Apoya compañeros cuando lo necesitan", "medal"),
-                new Insignia("Smart thinker", "Propone soluciones inteligentes", "medal"),
-                new Insignia("Sprint finisher", "Termina tareas clave del sprint", "medal"),
-                new Insignia("Sprint member", "Participa activamente en el sprint", "medal"),
-                new Insignia("Tech guru", "Destaca con conocimientos técnicos", "medal"),
-                new Insignia("Unlocker", "Desbloquea bloqueos del equipo", "medal"),
-                new Insignia("Value booster", "Genera valor en cada entrega", "medal"),
-                new Insignia("Bug fixer Bronce", "Corrige un número significativo de bugs", "milestone"),
-                new Insignia("Bug fixer Plata", "Corrige muchos bugs en varios sprints", "milestone"),
-                new Insignia("Bug fixer Oro", "Corrige bugs críticos consistentemente", "milestone"),
+                new Medal("Knowledge conector", "Comparte conocimiento con el equipo", "MEDAL"),
+                new Medal("Adaptability engine", "Se adapta rápido a cambios y obstáculos", "MEDAL"),
+                new Medal("Bug slayer", "Detecta y elimina bugs constantemente", "MEDAL"),
+                new Medal("Communication champ", "Mantiene una comunicación clara y efectiva", "MEDAL"),
+                new Medal("Fearless leader", "Lidera iniciativas con valentía", "MEDAL"),
+                new Medal("Helping hand", "Apoya compañeros cuando lo necesitan", "MEDAL"),
+                new Medal("Smart thinker", "Propone soluciones inteligentes", "MEDAL"),
+                new Medal("Sprint finisher", "Termina tareas clave del sprint", "MEDAL"),
+                new Medal("Sprint member", "Participa activamente en el sprint", "MEDAL"),
+                new Medal("Tech guru", "Destaca con conocimientos técnicos", "MEDAL"),
+                new Medal("Unlocker", "Desbloquea bloqueos del equipo", "MEDAL"),
+                new Medal("Value booster", "Genera valor en cada entrega", "MEDAL"),
 
-                new Insignia("Code contributor Bronce", "Aporta código útil al proyecto", "milestone"),
-                new Insignia("Code contributor Plata", "Contribuye con varias funcionalidades", "milestone"),
-                new Insignia("Code contributor Oro", "Contribución sobresaliente al código", "milestone"),
-
-                new Insignia("Feedback loop Bronce", "Da retroalimentación constante", "milestone"),
-                new Insignia("Feedback loop Plata", "Retroalimenta ayudando a mejorar resultados", "milestone"),
-                new Insignia("Feedback loop Oro", "Feedback preciso que impulsa calidad", "milestone"),
-
-                new Insignia("Sprint synergy Bronce", "Buena colaboración en el sprint", "milestone"),
-                new Insignia("Sprint synergy Plata", "Sincronización notable en entregas", "milestone"),
-                new Insignia("Sprint synergy Oro", "Sinergia sobresaliente en el sprint", "milestone"),
-
-                new Insignia("Task closer Bronce", "Cierra tareas correctamente", "milestone"),
-                new Insignia("Task closer Plata", "Cierra tareas con eficiencia", "milestone"),
-                new Insignia("Task closer Oro", "Cierra tareas críticas y complejas", "milestone"),
-
-                new Insignia("Team uplifter Bronce", "Ayuda al equipo a mejorar", "milestone"),
-                new Insignia("Team uplifter Plata", "Mejora la moral del equipo", "milestone"),
-                new Insignia("Team uplifter Oro", "Eleva al equipo consistentemente", "milestone")
+                new Milestone("Bug fixer", "Corrige un número significativo de bugs", "MILESTONE"),
+                new Milestone("Code contributor", "Aporta código útil al proyecto", "MILESTONE"),
+                new Milestone("Feedback loop", "Da retroalimentación constante", "MILESTONE"),
+                new Milestone("Sprint synergy", "Buena colaboración en el sprint", "MILESTONE"),
+                new Milestone("Task closer", "Cierra tareas correctamente", "MILESTONE"),
+                new Milestone("Team uplifter", "Ayuda al equipo a mejorar", "MILESTONE")
         );
         List<String> images = List.of(
                 "Knowledge_Conector.png",
@@ -131,13 +94,22 @@ public class InsigniaService {
                 "Team_Uplifter_plata.png",
                 "Team_Uplifter_oro.png"
         );
-        for(int i = 0; i<insignias.size(); i++) {
-            Insignia insignia = insigniaRepository.save(insignias.get(i));
-            try{
-                saveImage(insignia.getId(), getImageAsMultipart(images.get(i)));
+        int i = 0;
+        int limit;
+        for(Insignia insignia : insignias) {
+            insignia = insigniaRepository.save(insignia);
+            switch (insignia.getType()) {
+                case MEDAL -> limit = 1;
+                case MILESTONE -> limit = 3;
+                default -> limit = 1;
             }
-            catch(Exception e){
-                System.out.println("Couldn't save image" + images.get(i));
+            for (int j = 0; j < limit; j++){
+                try {
+                    saveImage(insignia.getId(), imageService.getImageAsMultipart(images.get(i)));
+                } catch (Exception e) {
+                    System.out.println("Couldn't save image" + images.get(i) + e.getMessage());
+                }
+                i++;
             }
         }
     }
@@ -151,9 +123,16 @@ public class InsigniaService {
     }
 
     public InsigniaDTO saveInsignia(InsigniaDTO insigniaDTO) {
-        Insignia insignia = new  Insignia();
+        Insignia insignia = null;
+        switch (insigniaDTO.type()){
+            case InsigniaType.MEDAL -> insignia = new Medal();
+            case InsigniaType.MILESTONE ->  insignia = new Milestone();
+            default -> {
+                return null;
+            }
+        }
         insignia.setDescription(insigniaDTO.description());
-        insignia.setNombre(insigniaDTO.nombre());
+        insignia.setName(insigniaDTO.name());
         insignia.setImage(imageMapper.toEntity(insigniaDTO.image()));
         return insigniaMapper.toDTO(insigniaRepository.save(insignia));
     }
@@ -165,7 +144,7 @@ public class InsigniaService {
 
     public InsigniaDTO updateInsignia(long id, InsigniaDTO insigniaDTO) {
         Insignia insignia = insigniaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Insignia not found"));
-        insignia.setNombre(insigniaDTO.nombre());
+        insignia.setName(insigniaDTO.name());
         insignia.setImage(imageMapper.toEntity(insigniaDTO.image()));
         insignia.setDescription(insigniaDTO.description());
         return insigniaMapper.toDTO(insigniaRepository.save(insignia));
@@ -177,9 +156,14 @@ public class InsigniaService {
         return insigniaMapper.toDTO(insignia);
     }
 
+    @Transactional
     public InsigniaDTO saveImage(long id, MultipartFile file) {
         Insignia insignia = insigniaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Insignia not found"));
         insignia.setImage(imageService.saveImage(file));
         return insigniaMapper.toDTO(insigniaRepository.save(insignia));
+    }
+
+    public Insignia findInsignia(long id) {
+        return insigniaRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Insignia not found"));
     }
 }

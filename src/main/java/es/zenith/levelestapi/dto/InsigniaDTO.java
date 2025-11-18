@@ -4,7 +4,7 @@ import es.zenith.levelestapi.Enumeration.InsigniaType;
 
 public record InsigniaDTO(
     Long id,
-    String nombre,
+    String name,
     String description,
     InsigniaType type,
     ImageDTO image
