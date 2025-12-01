@@ -18,11 +18,16 @@ public class User {
     @CreationTimestamp
     private LocalDateTime creationDate;
 
+    @Column(unique = true)
     private String username;
-    private String password;
+
+    private String encodedPassword;
     private String name;
     private String surname;
+
+    @Column(unique = true)
     private String email;
+
     private List<String> roles = new ArrayList<>();;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -38,7 +43,7 @@ public class User {
     public User(String username, String password, String name, String surname, String email, List<String> roles) {
         this.id = 0;
         this.username = username;
-        this.password = password;
+        this.encodedPassword = password;
         this.creationDate = LocalDateTime.now();
         this.name = name;
         this.surname = surname;
@@ -50,8 +55,8 @@ public class User {
         return id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEncodedPassword() {
+        return encodedPassword;
     }
 
     public void setId(Long id) {
@@ -62,8 +67,8 @@ public class User {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEncodedPassword(String password) {
+        this.encodedPassword = password;
     }
 
     public void setName(String name) {

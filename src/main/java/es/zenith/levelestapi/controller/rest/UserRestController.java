@@ -20,6 +20,7 @@ public class UserRestController {
     private UserService userService;
 
     @PostMapping("/login")
+    @Deprecated
     public UserDTO login(@RequestBody LoginForm loginForm){
         return userService.login(loginForm);
     }
