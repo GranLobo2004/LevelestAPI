@@ -176,4 +176,8 @@ public class UserService {
         user.addRole(role.toUpperCase());
         return userMapper.toDTO(userRepository.save(user));
     }
+
+    public UserDTO getLoggedInUser() {
+        return userMapper.toDTO(getLoggedUser());
+    }
 }

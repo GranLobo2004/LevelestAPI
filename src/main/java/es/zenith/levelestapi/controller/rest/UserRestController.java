@@ -30,6 +30,11 @@ public class UserRestController {
        return userService.getUsers();
     }
 
+    @GetMapping("/me")
+    public UserDTO getCurrentUser(){
+        return userService.getLoggedInUser();
+    }
+
     @GetMapping("/{id}")
     public UserDTO getUser(@PathVariable long id){
         return userService.getUser(id);
