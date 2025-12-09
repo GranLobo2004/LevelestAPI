@@ -119,28 +119,26 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public List<LevelSimpleDTO> getLevels(long id) {
+    public List<LevelSimpleDTO> getLevels(long id, boolean completed) {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
+        List<Level> userLevels;
+        if (completed) userLevels = user.getCompletedLevels();
+        else userLevels = user.getFailedLevels();
         List<LevelSimpleDTO> levels = new ArrayList<>();
-        for(Level level: user.getCompletedLevels()){
+        for(Level level: userLevels) {
             levels.add(levelMapper.toSimpleDTO(level));
         }
         return levels;
     }
 
     @Transactional
-    public LevelDTO addCompletedLevels(long id, long levelId) {
+    public LevelDTO addLevel(long id, long levelId, boolean completed) {
         if (!allowedAction(id)) throw new AccessDeniedException("Access denied");
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
         LevelDTO levelDTO = levelService.getLevel(levelId);
         Level level = levelMapper.toEntity(levelDTO);
-        boolean containsLevel = false;
-        for (Level l: user.getCompletedLevels()){
-            if (l.getId().equals(level.getId())){
-                containsLevel = true;
-            }
-        }
-        if (!containsLevel) user.addCompletedLevels(level);
+        if (completed) user.addCompletedLevels(level);
+        else user.addFailedLevel(level);
         userRepository.save(user);
         return levelDTO;
     }

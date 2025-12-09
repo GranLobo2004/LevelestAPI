@@ -59,12 +59,22 @@ public class UserRestController {
 
     @GetMapping("/{id}/completedLevels")
     public List<LevelSimpleDTO> getLevelsCompleted(@PathVariable long id){
-        return userService.getLevels(id);
+        return userService.getLevels(id, true);
     }
 
     @PostMapping("/{id}/completedLevels")
     public LevelDTO createLevelsCompleted(@PathVariable long id, @RequestBody long levelId){
-        return userService.addCompletedLevels(id, levelId);
+        return userService.addLevel(id, levelId, true);
+    }
+
+    @GetMapping("/{id}/failedLevels")
+    public List<LevelSimpleDTO> getfailedLevels(@PathVariable long id){
+        return userService.getLevels(id, false);
+    }
+
+    @PostMapping("/{id}/failedLevels")
+    public LevelDTO createfailedLevels(@PathVariable long id, @RequestBody long levelId){
+        return userService.addLevel(id, levelId, false);
     }
 
     @GetMapping("/{id}/insignias")

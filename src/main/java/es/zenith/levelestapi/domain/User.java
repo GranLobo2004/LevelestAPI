@@ -36,6 +36,9 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Level> completedLevels = new  ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Level> failedLevels = new  ArrayList<>();
+
     public User() {
         this.id = 0;
     }
@@ -84,8 +87,14 @@ public class User {
     }
 
     public void addCompletedLevels(Level level) {
+        if (!completedLevels.contains(level)) {
+            this.failedLevels.remove(level);
+            this.completedLevels.add(level);
+        }
+    }
 
-        this.completedLevels.add(level);
+    public void addFailedLevel(Level level) {
+        if (!failedLevels.contains(level)) this.failedLevels.add(level);
     }
 
     public String getUsername() {
@@ -110,6 +119,10 @@ public class User {
 
     public List<Level> getCompletedLevels() {
         return completedLevels;
+    }
+
+    public List<Level> getFailedLevels() {
+        return failedLevels;
     }
 
     public List<String> getRoles() {
