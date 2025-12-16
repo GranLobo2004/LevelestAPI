@@ -68,6 +68,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/users/*").hasRole("USER")
                     .requestMatchers(HttpMethod.DELETE, "/users/*").hasRole("USER")
                     .requestMatchers(HttpMethod.POST, "/users/*/completedLevels").hasRole("USER")
+                    .requestMatchers(HttpMethod.POST, "/users/*/failedLevels").hasRole("USER")
                     .requestMatchers(HttpMethod.GET, "/users/*/insignias").hasRole("DEVELOPER")
                     .requestMatchers(HttpMethod.POST, "/users/*/insignias").hasRole("DEVELOPER")
                     .requestMatchers(HttpMethod.POST, "/users/*/roles").hasRole("DEVELOPER")

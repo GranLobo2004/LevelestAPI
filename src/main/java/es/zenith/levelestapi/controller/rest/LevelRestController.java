@@ -31,7 +31,7 @@ public class LevelRestController {
 
     @GetMapping("/{id}")
     public LevelDTO getLevel(@PathVariable long id){
-        return levelService.getLevel(id);
+        return levelService.getLevelDTO(id);
     }
 
     @PostMapping("/")

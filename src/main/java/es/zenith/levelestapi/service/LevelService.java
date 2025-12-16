@@ -479,7 +479,11 @@ public class LevelService {
         return list;
     }
 
-    public LevelDTO getLevel(long id) {
+    protected Level getLevel(long id){
+        return levelRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Level not found"));
+    }
+
+    public LevelDTO getLevelDTO(long id) {
         Level level = levelRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Level not found"));
         return levelMapper.toDTO(level);
     }

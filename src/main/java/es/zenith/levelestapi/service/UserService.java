@@ -135,12 +135,11 @@ public class UserService {
     public LevelDTO addLevel(long id, long levelId, boolean completed) {
         if (!allowedAction(id)) throw new AccessDeniedException("Access denied");
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not found"));
-        LevelDTO levelDTO = levelService.getLevel(levelId);
-        Level level = levelMapper.toEntity(levelDTO);
+        Level level = levelService.getLevel(levelId);
         if (completed) user.addCompletedLevels(level);
         else user.addFailedLevel(level);
         userRepository.save(user);
-        return levelDTO;
+        return levelMapper.toDTO(level);
     }
 
     public List<InsigniaDTO> getInsignias(long id) {

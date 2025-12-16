@@ -63,7 +63,7 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/completedLevels")
-    public LevelDTO createLevelsCompleted(@PathVariable long id, @RequestBody long levelId){
+    public LevelDTO addLevelCompleted(@PathVariable long id, @RequestBody long levelId){
         return userService.addLevel(id, levelId, true);
     }
 
@@ -73,7 +73,7 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/failedLevels")
-    public LevelDTO createfailedLevels(@PathVariable long id, @RequestBody long levelId){
+    public LevelDTO addLevelFailed(@PathVariable long id, @RequestBody long levelId){
         return userService.addLevel(id, levelId, false);
     }
 
